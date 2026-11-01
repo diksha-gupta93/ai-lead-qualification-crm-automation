@@ -1,0 +1,540 @@
+{
+  "info": {
+    "name": "AI Lead Qualification - Portfolio Acceptance Tests",
+    "description": "Synthetic test inputs for self-hosted n8n workflow. Use only a private CRM test account and mailboxes you control. Review actual AI scores; requested category is not guaranteed. Import and set baseUrl. Never commit sensitive credentials.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5678"
+    },
+    {
+      "key": "webhookPath",
+      "value": "webhook"
+    },
+    {
+      "key": "webhookName",
+      "value": "ai-lead-qualification"
+    }
+  ],
+  "item": [
+    {
+      "name": "T01 - HOT - approve",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.hot01@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"AI chatbot\",\n  \"job_title\": \"Founder\",\n  \"company_size\": 120,\n  \"budget\": 18000,\n  \"timeline_days\": 14,\n  \"message\": \"I am the founder and final budget approver. We need an AI customer-support chatbot integrated with our website and CRM within 14 days. I have approved a budget of 18000 EUR. Please discuss an implementation plan.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: HOT. Approve; check SENT and CONTACTED. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T02 - WARM - approve",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.warm02@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"Workflow Automation\",\n  \"job_title\": \"Operations Specialist\",\n  \"company_size\": 12,\n  \"budget\": 3500,\n  \"timeline_days\": 75,\n  \"message\": \"I am part of the vendor evaluation team. We want to automate manual invoice intake and data entry using workflow automation. We hope to roll this out in about 75 days and would like to discuss options.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: WARM. Approve; check SENT and CONTACTED. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T03 - COLD",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.cold03@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"AI chatbot\",\n  \"job_title\": \"Research Assistant\",\n  \"company_size\": 5,\n  \"budget\": 300,\n  \"timeline_days\": 240,\n  \"message\": \"I am collecting early information about a possible AI chatbot for answering website FAQs next year. I do not participate in supplier selection or purchasing. We have no immediate implementation plans.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: COLD. Check NURTURE; no approval email. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T04 - REVIEW - unrelated service",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.review04@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"Office furniture\",\n  \"job_title\": \"Owner\",\n  \"company_size\": 45,\n  \"budget\": 25000,\n  \"timeline_days\": 14,\n  \"message\": \"We need to buy office chairs and wooden desks for a new office next month. Please send furniture catalogs and delivery prices. We are not looking for software or AI services.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: REVIEW. Check MANUAL_REVIEW and review notification. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T05 - HOT - reject",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.reject05@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"Custom AI integrations\",\n  \"job_title\": \"CEO\",\n  \"company_size\": 80,\n  \"budget\": 20000,\n  \"timeline_days\": 10,\n  \"message\": \"I am the CEO and approve the project budget. We need a custom AI integration that routes support tickets to the correct teams and summarizes each case. We need implementation within 10 days.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: HOT. Reject; check no outgoing follow-up and APPROVAL_REJECTED. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T06 - duplicate T01",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.hot01@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"AI chatbot\",\n  \"job_title\": \"Founder\",\n  \"company_size\": 120,\n  \"budget\": 18000,\n  \"timeline_days\": 14,\n  \"message\": \"I am the founder and final budget approver. We need an AI customer-support chatbot integrated with our website and CRM within 14 days. I have approved a budget of 18000 EUR. Please discuss an implementation plan.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: DUPLICATE. Run after T01; check DUPLICATE log and no new draft. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T07 - invalid email",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"not-an-email\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"Workflow Automation\",\n  \"message\": \"We need an AI chatbot for customer support.\",\n  \"budget\": 4000,\n  \"timeline_days\": 30,\n  \"company_size\": 30\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: INVALID. Check INVALID log; no Hunter, Groq or HubSpot. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T08 - missing message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.invalid08@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"Workflow Automation\",\n  \"message\": \"\",\n  \"budget\": 4000,\n  \"timeline_days\": 30,\n  \"company_size\": 30\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: INVALID. Check validation errors. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T09 - negative budget",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.invalid09@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"Workflow Automation\",\n  \"message\": \"We need AI help desk automation.\",\n  \"budget\": -50,\n  \"timeline_days\": 30,\n  \"company_size\": 30\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: INVALID. Check budget validation error. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T10 - no budget",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.nobudget10@example.com\",\n  \"company\": \"Microsoft\",\n  \"company_domain\": \"microsoft.com\",\n  \"service_interest\": \"Workflow Automation\",\n  \"job_title\": \"Operations Lead\",\n  \"company_size\": 100,\n  \"timeline_days\": 30,\n  \"message\": \"I lead operations and want to automate customer support triage within 30 days. I am evaluating vendors but do not have budget approval. Please propose an approach.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: ANY. Verify budget=0 points; inspect actual category. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "T11 - Hunter no match / API behavior",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/{{webhookPath}}/{{webhookName}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "{{webhookPath}}",
+            "{{webhookName}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Alex\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo.hunter11@example.com\",\n  \"company\": \"Fictional Test Company\",\n  \"company_domain\": \"nonexistent-example-company-987654321.invalid\",\n  \"service_interest\": \"Workflow Automation\",\n  \"job_title\": \"Manager\",\n  \"company_size\": 10,\n  \"budget\": 3500,\n  \"timeline_days\": 45,\n  \"message\": \"We want a customer FAQ chatbot within 45 days.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Expected target: ERROR_OR_CONTINUE. Check actual Hunter response; may fail before Groq; do not present as fallback success. Check n8n execution and Data Tables; webhook HTTP status alone does not prove success."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Webhook returns a non-server HTTP status\", function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "// Note: For n8n webhook responding immediately, this does NOT assert downstream success."
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
